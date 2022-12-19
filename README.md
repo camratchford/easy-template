@@ -133,7 +133,10 @@ Author: [Person McPersonface](https://github.com/pmcpface)
 Contact: [Person.McPersonface@example.com](mailto:Person.McPersonface@example.com)
 ```
 
-
+Ex: Mutiple template files
+```shell
+ezt one -c ~/ezt/config.yml -v readme.yml README.md.j2 anotherone.j2
+```
 
 ## Author
 [Cam Ratchford](https://github.com/camratchford)
