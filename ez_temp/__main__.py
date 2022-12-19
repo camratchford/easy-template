@@ -1,4 +1,3 @@
-from typing import Union
 from ez_temp.config import Config
 
 from ez_temp.templater import Templates

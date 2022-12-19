@@ -53,7 +53,6 @@ global_variables:
   email: Person.McPersonface@example.com
   github_profile: https://github.com/pmcpface
 
-Create templates: 
 ```
 
 ### Create template file

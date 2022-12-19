@@ -5,6 +5,7 @@ import yaml
 
 logger = logging.getLogger("__name__")
 
+
 class TemplateVars(object):
     def __init__(self, config):
         self.var_dir = config.template_folder

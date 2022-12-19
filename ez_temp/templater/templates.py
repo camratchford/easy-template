@@ -6,6 +6,7 @@ from ez_temp.config import config
 
 logger = logging.getLogger("__name__")
 
+
 class Templates(object):
     def __init__(self, jinja_conf):
         self.env = Environment(

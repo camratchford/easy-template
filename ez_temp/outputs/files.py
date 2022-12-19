@@ -31,7 +31,3 @@ class FileHandler(object):
 
             except FileExistsError as e:
                 logger.warning(e)
-
-
-
-

@@ -18,6 +18,7 @@ def cli(debug):
     if debug:
         click.echo(message="Debug Mode Active\n")
 
+
 @cli.command(name="one", context_settings={"ignore_unknown_options": True})
 @click.option(
     "-c", "--config-file",
