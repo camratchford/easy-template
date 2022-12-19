@@ -1,0 +1,143 @@
+<h1 align="center">Easy Template</h1>
+<p align="center">
+Quick and Dirty jinja templating from CLI and YAML
+</p>
+
+---
+
+> <p align="center">
+>  This is a work in progress, subject to many changes and new instabilities / brokenness.
+> </p>
+
+## Introduction
+This project was made because I liked the templating workflow that's present in Ansible, 
+but I found that installing Ansible just for the templating is kind of inconvenient. 
+
+So here we have the jinja templating system ingesting YAML, all run via some click CLI commands.  
+No inventory, group_vars, hostnames, or other Ansible-related considerations necessary.
+
+## Getting started
+
+### Install easy-template:
+```shell
+python3 -m venv venv
+source venv/bin/activate
+pip install  git+https://github.com/camratchford/easy-template
+```
+
+### Create input and output directories:
+```shell
+mkdir -p ~/ezt ~/ezt/templates ~/ext/output
+```
+
+### Create config file:
+
+Ex: `~/ezt/config.yml`
+```yaml
+template_folder: ~/ezt/templates
+output_folder: ~/ezt/output
+force_overwrite: True
+
+# Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
+jinja_config:
+  trim_blocks: False
+  newline_sequence: '\n'
+  keep_trailing_newline: False
+  cache_size: 400
+  auto_reload: False
+  optimized: True
+
+# Will be applied to every template, but can be over-ridden by var files
+global_variables:
+  name: Person McPersonface
+  email: Person.McPersonface@example.com
+  github_profile: https://github.com/pmcpface
+
+Create templates: 
+```
+
+### Create template file
+
+Ex: `~/ezt/README.md.j2`
+```markdown
+
+
+# {{ title }}
+
+{{ description }}
+
+> {{ disclaimer }}
+
+{% if toc %}
+{% for t in toc %}
+- [{{ t.label }}]({{ t.link }})
+{% endfor %}
+{% endif %}
+  
+Author: [{{ name }}]({{ github_profile }})
+
+Contact: [{{ email }}](mailto:{{ email }})
+```
+
+### Create var file:
+Ex: `~/ezt/readme.yml`
+```yaml
+
+title: How to make a cheeseburger
+description: A simple step by step guide on how to make juicy burgers
+disclaimer: I am not a professional. Any injury, disablement, or deaths caused by the burgers you consume are not my fault.
+toc:
+  - label: Get meat
+    link: ./docs/meats.md 
+  - label: Cook meat
+    link: ./docs/cooking.md 
+  - label: Enjoy
+    link: ./docs/enjoy.md 
+```
+
+### Run
+
+Ex: Only one file
+```shell
+ezt one -c ~/ezt/config.yml -v readme.yml README.md.j2
+```
+
+This command reads in the config file `~/ezt/config.yml`, searches the template directory defined in the file for `readme.yml`,
+then searches the template directory for `README.md.j2`.
+
+The command outputs a file `README.md` to the output directory defined in your config.
+
+> You can also define the location of the config file with the environment variable `EZT_CONF` <br>
+> For example, you can run: 
+> `export EZT_CONF="~/ezt/config.yml"`
+
+The contents of `README.md`:
+```markdown
+# How to make a cheeseburger
+
+A simple step by step guide on how to make juicy burgers
+
+> I am not a professional. Any injury, disablement, or deaths caused by the burgers you consume are not my fault.
+
+
+
+- [Get meat](./docs/meats.md)
+
+- [Cook meat](./docs/cooking.md)
+
+- [Enjoy](./docs/enjoy.md)
+
+
+
+Author: [Person McPersonface](https://github.com/pmcpface)
+
+Contact: [Person.McPersonface@example.com](mailto:Person.McPersonface@example.com)
+```
+
+
+
+## Author
+[Cam Ratchford](https://github.com/camratchford)
+
+## License
+[CC0 1.0 Universal](./LICENSE)
