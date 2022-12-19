@@ -135,7 +135,7 @@ Contact: [Person.McPersonface@example.com](mailto:Person.McPersonface@example.co
 
 Ex: Mutiple template files
 ```shell
-ezt one -c ~/ezt/config.yml -v readme.yml README.md.j2 anotherone.j2
+ezt many -c ~/ezt/config.yml -v readme.yml README.md.j2 anotherone.j2
 ```
 
 ## Author
