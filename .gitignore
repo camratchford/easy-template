@@ -247,3 +247,5 @@ Sessionx.vim
 tags
 # Persistent undo
 [._]*.un~
+/bin/ezt.exe
+/bin/README.md
