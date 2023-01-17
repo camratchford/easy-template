@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 
 class FileHandler(object):
@@ -28,6 +28,7 @@ class FileHandler(object):
                 with open(path, "w") as writer:
                     writer.write(content)
                     logger.debug(f"Rendered {path} template")
+
 
             except FileExistsError as e:
                 logger.warning(e)

@@ -10,8 +10,8 @@ Quick and Dirty jinja templating from CLI and YAML
 > </p>
 
 ## Introduction
-This project was made because I liked the templating workflow that's present in Ansible, 
-but I found that installing Ansible just for the templating is kind of inconvenient. 
+This project was made because I liked the templating workflow that's present in Ansible,
+but I found that installing Ansible just for the templating is kind of inconvenient.
 
 So here we have the jinja templating system ingesting YAML, all run via some click CLI commands.  
 No inventory, group_vars, hostnames, or other Ansible-related considerations necessary.
@@ -34,8 +34,10 @@ mkdir -p ~/ezt ~/ezt/templates ~/ext/output
 
 Ex: `~/ezt/config.yml`
 ```yaml
-template_folder: ~/ezt/templates
-output_folder: ~/ezt/output
+template_folder: ~\EasyTemplate\templates
+output_folder: ~\EasyTemplate\output
+vars_folder: ~\EasyTemplate\vars
+logs_folder: ~\EasyTemplate\logs
 force_overwrite: True
 
 # Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
@@ -43,7 +45,6 @@ jinja_config:
   trim_blocks: False
   newline_sequence: '\n'
   keep_trailing_newline: False
-  cache_size: 400
   auto_reload: False
   optimized: True
 
@@ -57,7 +58,7 @@ global_variables:
 
 ### Create template file
 
-Ex: `~/ezt/README.md.j2`
+Ex: `~/ezt/templates/README.md.j2`
 ```markdown
 
 
@@ -72,14 +73,14 @@ Ex: `~/ezt/README.md.j2`
 - [{{ t.label }}]({{ t.link }})
 {% endfor %}
 {% endif %}
-  
+
 Author: [{{ name }}]({{ github_profile }})
 
 Contact: [{{ email }}](mailto:{{ email }})
 ```
 
 ### Create var file:
-Ex: `~/ezt/readme.yml`
+Ex: `~/ezt/templatesreadme.yml`
 ```yaml
 
 title: How to make a cheeseburger
@@ -87,11 +88,11 @@ description: A simple step by step guide on how to make juicy burgers
 disclaimer: I am not a professional. Any injury, disablement, or deaths caused by the burgers you consume are not my fault.
 toc:
   - label: Get meat
-    link: ./docs/meats.md 
+    link: ./docs/meats.md
   - label: Cook meat
-    link: ./docs/cooking.md 
+    link: ./docs/cooking.md
   - label: Enjoy
-    link: ./docs/enjoy.md 
+    link: ./docs/enjoy.md
 ```
 
 ### Run
@@ -107,10 +108,10 @@ then searches the template directory for `README.md.j2`.
 The command outputs a file `README.md` to the output directory defined in your config.
 
 > You can also define the location of the config file with the environment variable `EZT_CONF` <br>
-> For example, you can run: 
+> For example, you can run:
 > `export EZT_CONF="~/ezt/config.yml"`
 
-The contents of `README.md`:
+The contents of `~/ezt/output/README.md`:
 ```markdown
 # How to make a cheeseburger
 
@@ -137,6 +138,44 @@ Ex: Mutiple template files
 ```shell
 ezt many -c ~/ezt/config.yml -v readme.yml README.md.j2 anotherone.j2
 ```
+
+## Logging
+Easy-Template has the ability to keep and store logs. This might be useful for debugging templating errors, and other record keeping tasks.
+
+### Logging config
+
+Configuration of Python's logging module is done bia the [`logging.dictConfig`](https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig) method
+Examples of how to implement this can be found in the [official documentation](https://docs.python.org/3/library/logging.config.html#dictionary-schema-details)
+
+Simply add the requisite configuration in your ezt config file under the key `logging_config:`
+
+Ex: `~/ezt/config.yml`
+```yaml
+# ...
+# Your normal config keys above
+
+log_config:
+  version: 1
+  disable_existing_loggers: True
+  formatters:
+    verbose:
+      fmt: |
+        %(process)s -> %(filename)s -> %(levelprefix)s -> %(module)s -> %(funcName)s -> %(lineno)s ->> %(message)s
+      use_colors: True
+  handlers:
+    default:
+      class : logging.handlers.RotatingFileHandler
+      formatter: verbose
+      filename: ez_temp.log
+      maxBytes: 1024
+      backupCount: 3
+  loggers:
+    ez_temp:
+      handlers: default
+      level: DEBUG
+      propagate: True
+```
+
 
 ## Author
 [Cam Ratchford](https://github.com/camratchford)

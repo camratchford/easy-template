@@ -69,7 +69,7 @@ setup(
     ],
     entry_points={
         'console_scripts': {
-            'ezt = ez_temp.cli:cli',
+            'ezt = ez_temp.cli:run',
         }
     },
     project_urls={

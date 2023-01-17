@@ -10,9 +10,10 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+compilation/build/
 develop-eggs/
-dist/
+compilation/dist/
+compilation/ezt.spec
 downloads/
 eggs/
 .eggs/

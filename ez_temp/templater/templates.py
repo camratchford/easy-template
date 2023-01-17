@@ -1,19 +1,21 @@
 import logging
 
+from pathlib import Path
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from ez_temp.config import config
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 
 class Templates(object):
     def __init__(self, jinja_conf):
+        template_folder = Path(config.template_folder)
         self.env = Environment(
-            loader=FileSystemLoader(config.template_folder),
+            loader=FileSystemLoader(template_folder),
             autoescape=select_autoescape(),
         )
-
         for attr in jinja_conf.keys():
             if hasattr(self.env, attr):
                 try:
@@ -23,14 +25,17 @@ class Templates(object):
 
     def render(self, template_file):
         if template_file:
-            try:
-                template = self.env.get_template(template_file)
-                template_out = template.render()
+            template = self.env.get_template(template_file)
+            template_out = template.render()
 
-                return template_out
+            return template_out
 
-            except Exception as e:
-                logger.error(e)
+            # try:
+            #     template = self.env.get_template(template_file)
+            #     template_out = template.render()
+            #
+            #     return template_out
 
-
-
+            # except Exception as e:
+            #     print(__file__, e)
+            #     logger.error(e)
