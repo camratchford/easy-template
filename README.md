@@ -25,19 +25,14 @@ source venv/bin/activate
 pip install  git+https://github.com/camratchford/easy-template
 ```
 
-### Create input and output directories:
-```shell
-mkdir -p ~/ezt ~/ezt/templates ~/ext/output
-```
-
 ### Create config file:
 
 Ex: `~/ezt/config.yml`
 ```yaml
-template_folder: ~\EasyTemplate\templates
-output_folder: ~\EasyTemplate\output
-vars_folder: ~\EasyTemplate\vars
-logs_folder: ~\EasyTemplate\logs
+template_folder: ~\easy-template\templates
+output_folder: ~\easy-template\output
+vars_folder: ~\easy-template\vars
+logs_folder: ~\easy-template\logs
 force_overwrite: True
 
 # Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
@@ -58,7 +53,7 @@ global_variables:
 
 ### Create template file
 
-Ex: `~/ezt/templates/README.md.j2`
+Ex: `~/easy-template/templates/README.md.j2`
 ```markdown
 
 
@@ -80,7 +75,7 @@ Contact: [{{ email }}](mailto:{{ email }})
 ```
 
 ### Create var file:
-Ex: `~/ezt/templatesreadme.yml`
+Ex: `~/easy-template/templatesreadme.yml`
 ```yaml
 
 title: How to make a cheeseburger
@@ -99,9 +94,8 @@ toc:
 
 Ex: Only one file
 ```shell
-ezt one -c ~/ezt/config.yml -v readme.yml README.md.j2
+ezt -c ~/easy-template/config.yml -v readme.yml README.md.j2
 ```
-
 This command reads in the config file `~/ezt/config.yml`, searches the template directory defined in the file for `readme.yml`,
 then searches the template directory for `README.md.j2`.
 
@@ -134,11 +128,6 @@ Author: [Person McPersonface](https://github.com/pmcpface)
 Contact: [Person.McPersonface@example.com](mailto:Person.McPersonface@example.com)
 ```
 
-Ex: Mutiple template files
-```shell
-ezt many -c ~/ezt/config.yml -v readme.yml README.md.j2 anotherone.j2
-```
-
 ## Logging
 Easy-Template has the ability to keep and store logs. This might be useful for debugging templating errors, and other record keeping tasks.
 
@@ -149,7 +138,7 @@ Examples of how to implement this can be found in the [official documentation](h
 
 Simply add the requisite configuration in your ezt config file under the key `logging_config:`
 
-Ex: `~/ezt/config.yml`
+Ex: `~/easy-template/config.yml`
 ```yaml
 # ...
 # Your normal config keys above
