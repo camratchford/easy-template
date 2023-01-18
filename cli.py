@@ -1,8 +1,9 @@
+import sys
 
 import click
+from click.testing import CliRunner
 from ez_temp.config import config, configure_default_app_directory
 from ez_temp.__main__ import main
-
 
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.option(
@@ -20,6 +21,9 @@ from ez_temp.__main__ import main
 )
 @click.argument("templates", nargs=-1)
 def run(config_file: str, var_file: str, templates: list):
-    print("Hi!")
     config.configure_from_file(config_file)
     main(config, var_file, [t for t in templates])
+
+
+if getattr(sys, 'frozen', False):
+    run(sys.argv[1:])

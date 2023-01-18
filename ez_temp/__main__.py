@@ -24,10 +24,10 @@ def main(config: Config, var_file: str, templates):
             file_handler = FileHandler(config)
 
             file_handler.write_file(content=template_out, template_name=t)
-        exit(0)
+
     else:
         template_out = templater.render(templates)
         # Hand the output string over to the file handler
         file_handler = FileHandler(config)
         file_handler.write_file(content=template_out, template_name=templates)
-        exit(0)
+

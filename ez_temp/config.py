@@ -1,5 +1,3 @@
-
-
 import json
 import logging
 import logging.config
@@ -28,10 +26,11 @@ class Config:
         self.config_file_path = ""
         self.config_file = ""
 
-        self.template_folder = []
-        self.output_folder = []
-        self.vars_folder = []
+        self.template_folder = ""
+        self.output_folder = ""
+        self.vars_folder = ""
         self.logs_folder = ""
+
         self.force_overwrite = True
         self.jinja_config = {}
         self.global_variables = {}
@@ -72,7 +71,11 @@ class Config:
 
             if log_filename and Path(self.logs_folder).exists():
                 Path(self.logs_folder).joinpath(log_filename).touch()
-                self.log_config["handlers"]["file"]["filename"] = Path(self.logs_folder).joinpath(log_filename)
+                if (self.log_config.get("handlers")
+                    and self.log_config["handlers"].get("file")
+                    and self.log_config["handlers"]["file"].get("filename")):
+                
+                    self.log_config["handlers"]["file"]["filename"] = Path(self.logs_folder).joinpath(log_filename)
 
             logging.config.dictConfig(self.log_config)
 

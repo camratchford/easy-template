@@ -1,13 +1,7 @@
-import os
-from pathlib import Path
 
 import click
 from ez_temp.config import config, configure_default_app_directory
 from ez_temp.__main__ import main
-
-base_dir = Path(__file__).resolve().parent
-cwd = Path(os.getcwd())
-
 
 
 @click.command(context_settings={"ignore_unknown_options": True})

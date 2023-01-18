@@ -5,7 +5,6 @@ import os
 
 from setuptools import setup
 
-
 def get_long_description():
     """
     Return the README.
