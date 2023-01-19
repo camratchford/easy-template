@@ -37,7 +37,9 @@ minimal_requirements = [
     "colorama==0.4.6",
     "Jinja2==3.1.2",
     "MarkupSafe==2.1.1",
-    "PyYAML==6.0"
+    "PyYAML==6.0",
+    "pyinstaller==5.7.0",
+    "pyinstaller-hooks-contrib==2022.15"
 ]
 
 
