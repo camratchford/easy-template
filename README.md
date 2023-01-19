@@ -1,6 +1,6 @@
 <h1 align="center">Easy Template</h1>
 <p align="center">
-Quick and Dirty jinja templating from CLI and YAML
+Quick and Dirty Jinja templating from CLI with YAML
 </p>
 
 ---
@@ -29,10 +29,10 @@ pip install  git+https://github.com/camratchford/easy-template
 
 Ex: `~/ezt/config.yml`
 ```yaml
-template_folder: ~\easy-template\templates
-output_folder: ~\easy-template\output
-vars_folder: ~\easy-template\vars
-logs_folder: ~\easy-template\logs
+template_folder: ~/EasyTemplate/templates
+output_folder: ~/EasyTemplate/output
+vars_folder: ~/EasyTemplate/vars
+logs_folder: ~/EasyTemplate/logs
 force_overwrite: True
 
 # Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
@@ -103,9 +103,9 @@ The command outputs a file `README.md` to the output directory defined in your c
 
 > You can also define the location of the config file with the environment variable `EZT_CONF` <br>
 > For example, you can run:
-> `export EZT_CONF="~/ezt/config.yml"`
+> `export EZT_CONF="~/EasyTemplate/config.yml"`
 
-The contents of `~/ezt/output/README.md`:
+The contents of `~/EasyTemplate/output/README.md`:
 ```markdown
 # How to make a cheeseburger
 
@@ -138,7 +138,7 @@ Examples of how to implement this can be found in the [official documentation](h
 
 Simply add the requisite configuration in your ezt config file under the key `logging_config:`
 
-Ex: `~/easy-template/config.yml`
+Ex: `~/EasyTemplate/config.yml`
 ```yaml
 # ...
 # Your normal config keys above
