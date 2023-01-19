@@ -29,10 +29,10 @@ pip install git+https://github.com/camratchford/easy-template
 
 Ex: `~/.EasyTemplate/config.yml`
 ```yaml
-template_folder: ~/EasyTemplate/templates
-output_folder: ~/EasyTemplate/output
-vars_folder: ~/EasyTemplate/vars
-logs_folder: ~/EasyTemplate/logs
+template_folder: ~/.EasyTemplate/templates
+output_folder: ~/.EasyTemplate/output
+vars_folder: ~/.EasyTemplate/vars
+logs_folder: ~/.EasyTemplate/logs
 force_overwrite: True
 
 # Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
