@@ -1,7 +1,11 @@
+
 import logging
+
 from pathlib import Path
 
 import yaml
+
+from ez_temp.ingester.environment_variables import collect_variables
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +18,8 @@ class TemplateVars(object):
             self.vars = config.global_variables
 
     def ingest(self, var_file):
+        # Populates environ, os, sys keys
+        self.vars.update(collect_variables())
         # Finds valid paths
         if Path(self.var_dir).joinpath(var_file).exists():
             var_files = [
