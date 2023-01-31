@@ -27,5 +27,5 @@ def collect_variables():
     env['environ'].update(os.environ)
 
     vars.update(env)
-    pprint.pprint(vars)
+
 
