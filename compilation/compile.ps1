@@ -1,6 +1,8 @@
 # # PWD should be the same directory is this file resides
 
 $ScriptPath = split-path -parent $MyInvocation.MyCommand.Definition
+
+Set-Location $ScriptPath
 $DistPath = Join-Path -Path $ScriptPath -ChildPath "dist"
 $BuildPath = Join-Path $ScriptPath -ChildPath .\build -ErrorAction SilentlyContinue
 $SpecPath = Join-Path $ScriptPath -ChildPath .\ezt.spec -ErrorAction SilentlyContinue
@@ -43,8 +45,8 @@ $EXE_NAME="ezt"
 $INCLUDE_PATHS="../"
 $SCRIPT_FILE="../cli.py"
 
-Start-Process -FilePath "$VENV_PATH\Scripts\pyinstaller.exe" -ArgumentList @("-y", "--clean", "--console", "--onefile", "--name=$EXE_NAME", "--paths=$INCLUDE_PATHS", "--collect-submodules=ez_temp", $SCRIPT_FILE) -Wait -NoNewWindow 
+Start-Process -FilePath "pyinstaller" -ArgumentList @("-y", "--clean", "--console", "--onefile", "--name=$EXE_NAME", "--paths=$INCLUDE_PATHS", "--collect-submodules=ez_temp", $SCRIPT_FILE) -Wait -NoNewWindow
 
-.\dist\ezt.exe --help
-
-.\dist\ezt.exe -v "valid_vars.yml" "valid_README.md.j2"
+#.\dist\ezt.exe --help
+#
+#.\dist\ezt.exe -v "valid_vars.yml" "valid_README.md.j2"

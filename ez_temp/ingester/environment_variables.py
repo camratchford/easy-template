@@ -1,9 +1,16 @@
 import os
 import sys
-import pprint
+from datetime import datetime
+
 
 def collect_variables():
     vars = {}
+
+    time_vars = {
+        "now": datetime.now()
+    }
+    vars.update(time_vars)
+
     os_vars = {
         "os": {
             "name": os.name,
@@ -11,6 +18,7 @@ def collect_variables():
         }
     }
     vars.update(os_vars)
+
     sys_vars = {
         "sys": {
             "defaultencoding": sys.getdefaultencoding(),
@@ -23,9 +31,8 @@ def collect_variables():
     env = {
         "environ": {}
     }
-
     env['environ'].update(os.environ)
-
     vars.update(env)
 
+    return vars
 

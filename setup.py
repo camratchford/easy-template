@@ -38,6 +38,7 @@ minimal_requirements = [
     "Jinja2==3.1.2",
     "MarkupSafe==2.1.1",
     "PyYAML==6.0",
+    "python-magic-bin==0.4.14",
     "pyinstaller==5.7.0",
     "pyinstaller-hooks-contrib==2022.15"
 ]
