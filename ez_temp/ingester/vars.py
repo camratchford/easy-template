@@ -14,12 +14,13 @@ class TemplateVars(object):
     def __init__(self, config):
         self.var_dir = config.vars_folder
         self.vars = {}
+
         if config.global_variables:
             self.vars = config.global_variables
+            self.vars.update(collect_variables())
 
     def ingest(self, var_file):
         # Populates environ, os, sys keys
-        self.vars.update(collect_variables())
         # Finds valid paths
         if Path(self.var_dir).joinpath(var_file).exists():
             var_files = [
