@@ -94,7 +94,7 @@ config = Config()
 
 
 def configure_default_app_directory(config: Config, template_dir, output_dir, vars_dir, logs_dir, examples):
-    from ez_temp.bootstraping.default_configs import windows_default_config, posix_default_config
+    from ez_temp.bootstraping.default_config import default_config
     from ez_temp.bootstraping.example_files import example_vars, example_template
 
     template_dir = Path(template_dir)
@@ -109,12 +109,14 @@ def configure_default_app_directory(config: Config, template_dir, output_dir, va
     logs_dir.mkdir(exist_ok=True, mode=777)
 
     # Create the config file from the template if it doesn't already exist
-    config_file_path = f"{os.getcwd()}/ezt.yml"
-    if not config.config_file_path and not os.path.exists(config_file_path):
-        # Which config file contents determines which slashes we put in
-        config_file_contents = windows_default_config if os_config == "windows" else posix_default_config
+    config_file_path = rf"{os.getcwd()}\ezt.yml"
+
+    absolute_user_config_path = Path(config.config_file_path).absolute()
+    absolute_default_config_path = Path(config_file_path).absolute()
+
+    if absolute_user_config_path == absolute_default_config_path and not os.path.exists(config_file_path):
         with open(config_file_path, "w") as writer:
-            writer.write(config_file_contents)
+            writer.write(default_config)
     if examples:
         with open(template_dir.joinpath("valid_README.md.j2"), "w") as writer:
             writer.write(example_template)

@@ -9,7 +9,7 @@ from ez_temp.__main__ import main
     "-c",
     "--config-file",
     envvar="EZT_CONF",
-    default=config.config_file,
+    default=config.config_file_path,
     help="The location of the yaml configuration file",
     show_default=True,
 )
@@ -70,14 +70,14 @@ def run(
     template_dir: str, output_dir: str, logs_dir: str,
     examples: bool, force: bool, debug: bool, templates: list
 ):
-
-    config.configure_from_file(config_file)
     configure_default_app_directory(
         config=config,
         template_dir=template_dir, vars_dir=vars_dir,
         output_dir=output_dir, logs_dir=logs_dir,
         examples=examples
     )
+    config.configure_from_file(config_file)
+
     config.dry_run = examples
     config.force_overwrite = force
     config.debug = debug
