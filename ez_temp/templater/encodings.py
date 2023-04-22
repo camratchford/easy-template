@@ -6,7 +6,6 @@ import magic
 
 
 def check_encoding(file):
-    print(file)
     with open(file, "rb") as reader:
         blob = reader.read()
         encoding_obj = magic.Magic(mime_encoding=True)

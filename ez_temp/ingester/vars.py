@@ -13,16 +13,15 @@ logger = logging.getLogger(__name__)
 class TemplateVars(object):
     def __init__(self, config):
         self.var_dir = config.vars_folder
-        self.vars = {}
+        self.vars = collect_variables()
 
         if config.global_variables:
-            self.vars = config.global_variables
-            self.vars.update(collect_variables())
+            self.vars.update(config.global_variables)
 
-    def ingest(self, var_file):
+    def ingest(self, var_file=None):
         # Populates environ, os, sys keys
         # Finds valid paths
-        if Path(self.var_dir).joinpath(var_file).exists():
+        if var_file and Path(self.var_dir).joinpath(var_file).exists():
             var_files = [
                 p for p in [
                     Path(self.var_dir).joinpath(var_file),
