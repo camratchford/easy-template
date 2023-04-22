@@ -23,12 +23,13 @@ class FileHandler(object):
         if content:
             try:
                 if path.exists() and not self.force:
-                    raise FileExistsError(f"File {path} not rendered because the file already exists")
+                    raise FileExistsError(
+                        f"File {path} not rendered because the file already exists\n"
+                        "Use the --force option to override."
+                    )
 
                 with open(path, "w") as writer:
                     writer.write(content)
                     logger.debug(f"Rendered {path} template")
-
-
             except FileExistsError as e:
                 logger.warning(e)

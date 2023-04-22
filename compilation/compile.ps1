@@ -44,8 +44,10 @@ $VENV_PATH= (Join-Path (Split-Path -Parent $ScriptPath) -ChildPath "venv")
 $EXE_NAME="ezt"
 $INCLUDE_PATHS="../"
 $SCRIPT_FILE="../cli.py"
-
-Start-Process -FilePath "pyinstaller" -ArgumentList @("-y", "--clean", "--console", "--onefile", "--name=$EXE_NAME", "--paths=$INCLUDE_PATHS", "--collect-submodules=ez_temp", $SCRIPT_FILE) -Wait -NoNewWindow
+Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\activate")
+Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pip") -ArgumentList @('install -r "C:\Users\cameron\PycharmProjects\easy-template - Copy\ez_temp\requirements.txt"')  -Wait -NoNewWindow
+Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pip") -ArgumentList @("install ..") -Wait -NoNewWindow
+Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pyinstaller") -ArgumentList @("-y", "--clean", "--console", "--onefile", "--name=$EXE_NAME", "--paths=$INCLUDE_PATHS", "--collect-submodules=ez_temp", $SCRIPT_FILE) -Wait -NoNewWindow
 
 #.\dist\ezt.exe --help
 #

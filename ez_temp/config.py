@@ -22,21 +22,26 @@ else:
 class Config:
     def __init__(self):
         self.configured = False
+        self.debug = False
         self.base_dir = Path(__file__).resolve().parent
         self.cwd = Path(os.getcwd())
-        self.config_file_path = ""
+        self.config_file_path = self.cwd.joinpath("ezt.yml") if not os.path.exists(f"{os.getcwd()}/ezt.yml") else ""
         self.config_file = ""
+        self.dry_run = False
 
-        self.template_folder = ""
-        self.output_folder = ""
-        self.vars_folder = ""
-        self.logs_folder = ""
+        self.template_folder = self.cwd.joinpath("templates")
+        self.output_folder = self.cwd.joinpath("outputs")
+        self.vars_folder = self.cwd.joinpath("vars")
+        self.logs_folder = self.cwd.joinpath("logs")
 
-        self.force_overwrite = True
+        self.force_overwrite = False
         self.jinja_config = {}
         self.global_variables = {}
 
         self.log_config = None
+
+        if self.debug:
+            self.configure_debug_logging()
 
     def configure_from_file(self, config_file_path):
         self.config_file_path = config_file_path
@@ -80,67 +85,48 @@ class Config:
 
             logging.config.dictConfig(self.log_config)
 
-
-def configure_default_app_directory():
-    from ez_temp.bootstraping.default_configs import windows_default_config, posix_default_config
-    from ez_temp.bootstraping.example_files import example_vars, example_template
-    app_dir_dict = {
-        "Windows": {
-            "parent": os.getenv('USERPROFILE'),
-            "child": "EasyTemplate",
-            "config": windows_default_config
-        },
-        "Posix": {
-            "parent": os.getenv('HOME'),
-            "child": ".EasyTemplate",
-            "config": posix_default_config
-        }
-    }
-    parent = app_dir_dict.get(os_config).get("parent")
-    child = app_dir_dict.get(os_config).get("child")
-
-    # Create app folder
-    Path(parent).joinpath(child).mkdir(exist_ok=True)
-    app_folder = Path(parent).joinpath(child)
-
-    # Create templates, output, and vars folders
-    app_folder.joinpath("templates").mkdir(exist_ok=True)
-    app_folder.joinpath("output").mkdir(exist_ok=True)
-    app_folder.joinpath("vars").mkdir(exist_ok=True)
-    app_folder.joinpath("logs").mkdir(exist_ok=True)
-
-    dest_template_config = app_folder.joinpath("default_config.yml")
-    dest_example_template = app_folder.joinpath("templates").joinpath("valid_README.md.j2")
-    dest_example_vars = app_folder.joinpath("vars").joinpath("valid_vars.yml")
-
-    dest_path_dict = {
-        "config_dest": {
-            "destination_path": dest_template_config,
-            "contents": app_dir_dict.get(os_config).get("config")
-        },
-        "template_dest": {
-            "destination_path": dest_example_template,
-            "contents": example_template
-        },
-        "vars_dest": {
-            "destination_path": dest_example_vars,
-            "contents": example_vars
-        }
-    }
-
-    for file in ["config_dest", "template_dest", "vars_dest"]:
-        if not dest_path_dict[file]["destination_path"].exists():
-            with open(dest_path_dict[file]["destination_path"], "w") as writer:
-                writer.write(dest_path_dict[file]["contents"])
-
-
-
-    return dest_template_config
-
-
-
-
-
+    def configure_debug_logging(self):
+        import logging
+        logging.basicConfig(level=logging.DEBUG, format='Line %(lineno)d ;; %(filename)s ;; %(message)s')
 
 
 config = Config()
+
+
+def configure_default_app_directory(config: Config, template_dir, output_dir, vars_dir, logs_dir, examples):
+    from ez_temp.bootstraping.default_configs import windows_default_config, posix_default_config
+    from ez_temp.bootstraping.example_files import example_vars, example_template
+
+    template_dir = Path(template_dir)
+    output_dir = Path(output_dir)
+    vars_dir = Path(vars_dir)
+    logs_dir = Path(logs_dir)
+
+    # Create templates, output, and vars folders
+    template_dir.mkdir(exist_ok=True, mode=777)
+    output_dir.mkdir(exist_ok=True, mode=777)
+    vars_dir.mkdir(exist_ok=True, mode=777)
+    logs_dir.mkdir(exist_ok=True, mode=777)
+
+    # Create the config file from the template if it doesn't already exist
+    config_file_path = f"{os.getcwd()}/ezt.yml"
+    if not config.config_file_path and not os.path.exists(config_file_path):
+        # Which config file contents determines which slashes we put in
+        config_file_contents = windows_default_config if os_config == "windows" else posix_default_config
+        with open(config_file_path, "w") as writer:
+            writer.write(config_file_contents)
+    if examples:
+        with open(template_dir.joinpath("valid_README.md.j2"), "w") as writer:
+            writer.write(example_template)
+
+        with open(vars_dir.joinpath("valid_vars.yml"), "w") as writer:
+            writer.write(example_vars)
+
+
+
+
+
+
+
+
+
