@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 
 class Templates(object):
     def __init__(self, jinja_conf):
-        self.template_folder = Path(config.template_folder)
+        self.template_folder = Path(config.template_folder) if os.path.exists(config.template_folder) else None
+        if not self.template_folder:
+            raise FileNotFoundError("Template folder in config does not exist")
 
         self.env = Environment(
             loader=FileSystemLoader(self.template_folder),
@@ -37,6 +39,9 @@ class Templates(object):
         # check if template is an absolute path
         if os.path.exists(template_file):
             template_full_path = Path(template_file)
+        
+        logger.info(f"Template folder: {self.template_folder}\nTemplate file: {template_file}")
+        
 
         if not template_full_path:
             logger.error(f"{Path(self.template_folder.joinpath(template_file))} not found")
