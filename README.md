@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <h1 align="center">Easy Template</h1>
 <p align="center">
 Quick and Dirty Jinja templating from CLI with YAML
@@ -16,6 +17,7 @@ but I found that installing Ansible just for the templating is kind of inconveni
 So here we have the jinja templating system ingesting YAML, all run via some click CLI commands.  
 No inventory, group_vars, hostnames, or other Ansible-related considerations necessary.
 
+
 ## Getting started
 
 ### Install easy-template:
@@ -25,15 +27,16 @@ source venv/bin/activate
 pip install git+https://github.com/camratchford/easy-template
 ```
 
+
+
 ### Create config file:
 
-Ex: `~/EasyTemplate/config.yml`
+Ex: [example_files/config.yml](example_files/config.yml)
 ```yaml
-template_folder: ~/EasyTemplate/templates
-output_folder: ~/EasyTemplate/output
-vars_folder: ~/EasyTemplate/vars
-logs_folder: ~/EasyTemplate/logs
+external_function_dir: ./path/to/jinja_functions
 force_overwrite: True
+load_env_vars: True
+debug: False
 
 # Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
 jinja_config:
@@ -53,7 +56,7 @@ global_variables:
 
 ### Create template file
 
-Ex: `~/EasyTemplatee/templates/README.md.j2`
+Ex: [example_files/readme_template.md.j2](example_files/readme_template.md.j2)
 ```markdown
 
 
@@ -75,7 +78,7 @@ Contact: [{{ email }}](mailto:{{ email }})
 ```
 
 ### Create var file:
-Ex: `~/EasyTemplate/templatesreadme.yml`
+Ex: [example_files/vars.yml](example_files/vars.yml)
 ```yaml
 
 title: How to make a cheeseburger
@@ -92,23 +95,26 @@ toc:
 
 ### Run
 
-Ex: Only one file
+Ex: [example_files/example_script.sh](example_files/example_script.sh)
 ```shell
 # Config path arg is absolute, var and template args are relative to their respective directories defined in the config file
-ezt -c ~/EasyTemplate/config.yml -v readme.yml README.md.j2
+ezt.exe --force \
+  -c "example_files/config.yml" \
+  -t "example_files/readme_template.md.j2" \
+  -v "title=How do you make a cheeseburger?" \
+  --var-file "example_files/vars.yml" \
+  -o "example_files/README.md"
 ```
-This command reads in the config file `~/ezt/config.yml`, searches the template directory defined in the file for `readme.yml`,
-then searches the template directory for `README.md.j2`.
+This command reads in the config file `~/ezt/config.yml`, parses the variables in `~/vars/templatesreadme.yml`,
+loads the variables defined in the `-v` argument, then processes the template with the loaded variables, outputting the file
+in the path defined with the `-o` argument
 
 The command outputs a file `README.md` to the output directory defined in your config.
 
-> You can also define the location of the config file with the environment variable `EZT_CONF` <br>
-> For example, you can run:
-> `export EZT_CONF="~/EasyTemplate/config.yml"`
+Ex: The contents of [example_files/README.md](example_files/README.md)
 
-The contents of `~/EasyTemplate/output/README.md`:
 ```markdown
-# How to make a cheeseburger
+# How do you make a cheeseburger?
 
 A simple step by step guide on how to make juicy burgers
 
@@ -129,6 +135,65 @@ Author: [Person McPersonface](https://github.com/pmcpface)
 Contact: [Person.McPersonface@example.com](mailto:Person.McPersonface@example.com)
 ```
 
+---
+
+## Command-line arguments
+
+| Configuration Item    | Abrv | Keyword Argument        | Config File Key       | Default   | Required | Description                                                                                              | 
+|-----------------------|------|-------------------------|-----------------------|-----------|----------|----------------------------------------------------------------------------------------------------------|
+| config_file           | -c   | --config                | N/A                   | N/A       | No       | The location of the yaml configuration file.                                                             |
+| variables             | -v   | --variables             | variables             | []        | No       | A 'a_variable=some value' pair representing a variable, [Variable arguments](docs/variable_arguments.md) |
+| var_file              | N/A  | --var-file              | var_file              | ""        | No       | The path to a yaml file containing key: value pairs, representing variables                              |
+| output_file           | -o   | --output-file           | output_file           | ""        | No*      | The path where you'll find the output of ezt *(Unless rich_stdout is disabled)                           |
+| template_file         | -t   | --template-file         | N/A                   | ""        | Yes      | The path pointing toward the jinja template that ezt will use to create it's output                      |
+| external_function_dir | N/A  | --external-function-dir | external_function_dir | ""        | No       | The path pointing toward a folder of python files which contain jinja2 filter/test functions             |
+| force_overwrite       | -f   | --force                 | force_overwrite       | False     | No       | When true, output will overwrite any file in that path                                                   | 
+| load_env_vars         | N/A  | --load-environment-vars | load_env_vars         | False     | No       | Will load [Environment variables](docs/environment_variables.md) in as jinja variables                   | 
+| jinja_config          | N/A  | N/A                     | jinja_config          | ""        | No       | [Jinja templating engine options](https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api)        | 
+| log_config            | N/A  | N/A                     | log_config            | {}        | No       | [logging.dictConfig](https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig)    |
+| global_variables      | N/A  | N/A                     | global_variables      | {}        | No       | Another, more static, way to set variables (Other kinds of vars will overwrite them)                     |
+| rich_std_out          | N/A  | --no-rich-stdout        | rich_std_out          | True      | No       | Formats output string with [Rich](https://rich.readthedocs.io/en/latest/syntax.html)                     |
+| rich_markdown_stdout  | N/A  | --markdown              | rich_markdown_stdout  | False     | No       | Formats output string with [Rich's Markdown module](https://rich.readthedocs.io/en/latest/markdown.html) |
+| rich_theme            | N/A  | --rich-theme            | rich_theme            | "zenburn" | No       | Changes the output theme for Rich to one of the [Pygment Styles](https://pygments.org/styles/)           |
+
+
+---
+
+## Variables
+
+The variables are applied in the following order, with each instance of a variable being overwritten by any subsequent instances.
+
+1. Global variables (defined in the config file under the key `global_variables`)
+2. [Environment variables](docs/environment_variables.md) (If the `load_env_vars` configuration item is set to True)
+3. Variable file (Variables within a yaml file defined in the --var-file argument)
+4. [Variable arguments](docs/variable_arguments.md) (Variables defined using the `-v` arugment)
+
+---
+
+## External Jinja2 Functions (Filters and Tests)
+
+To use external Jinja2 filter functions, you may the switch `--external-function-dir path/to/function/dir` or the config file key `external_function_dir: some/path/to/function/`,
+to point to a path containing any number of the 2 python modules "filters" and "tests".
+
+> Setting the variable
+> `--external-function-dir ~\ezt\example_external_functions`
+
+```yaml
+# Example directory tree:
+~\ezt\example_external_functions\
+~\ezt\example_external_functions\filters\
+~\ezt\example_external_functions\filters\filters.py
+~\ezt\example_external_functions\tests\
+~\ezt\example_external_functions\tests\tests.py
+```
+
+Each function contained in either "filters" or "tests" modules will be merged into the set of filters and tests available to the user in jinja template tags 
+It will be helpful to read the official Jinja2 documentation on the subjects 
+ - [fiters](https://jinja.palletsprojects.com/en/3.1.x/api/#writing-filters)
+ - [tests](https://jinja.palletsprojects.com/en/3.1.x/api/#custom-tests)
+
+---
+
 ## Logging
 Easy-Template has the ability to keep and store logs. This might be useful for debugging templating errors, and other record keeping tasks.
 
@@ -139,7 +204,7 @@ Examples of how to implement this can be found in the [official documentation](h
 
 Simply add the requisite configuration in your ezt config file under the key `logging_config:`
 
-Ex: `~/EasyTemplate/config.yml`
+Ex: `~/example_files/config.yml`
 ```yaml
 # ...
 # Your normal config keys above
@@ -166,6 +231,7 @@ log_config:
       propagate: True
 ```
 
+---
 
 ## Compiling
 
@@ -212,9 +278,14 @@ cd .\EasyTemplate\compilation\
 .\compile.ps1
 ```
 
+---
 
 ## Author
 [Cam Ratchford](https://github.com/camratchford)
 
+---
+
 ## License
 [CC0 1.0 Universal](./LICENSE)
+
+---

@@ -1,7 +1,15 @@
-# Something {{ title }}
+# {{ title }}
 
-> A list
-{% for item in a_list %}
-- {{ item }}{% endfor %}
+{{ description }}
 
-{{ a_list | concat('utf-8') }}
+> {{ disclaimer }}
+
+{% if toc %}
+{% for t in toc %}
+- [{{ t.label }}]({{ t.link }})
+{% endfor %}
+{% endif %}
+
+Author: [{{ name }}]({{ github_profile }})
+
+Contact: [{{ email }}](mailto:{{ email }})

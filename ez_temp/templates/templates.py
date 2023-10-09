@@ -6,8 +6,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from ez_temp.config import config
-from ez_temp.templater.jinja_funcs import jinja_filters, get_functions_from_dir
-from ez_temp.templater.encodings import check_encoding, change_encoding
+from ez_temp.templates.jinja_funcs import jinja_filters, jinja_tests, get_functions_from_dir
+from ez_temp.templates.encodings import check_encoding, change_encoding
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +22,28 @@ class Templates(object):
                 autoescape=select_autoescape(),
         )
 
-        funcs = get_functions_from_dir()
-        if funcs:
-            jinja_filters.update(funcs)
-        for k, v in jinja_filters.items():
-            self.env.filters[k] = v
+        # Check if external_fuction_dir has subdirectories "filters" and "tests"
+        external_function_dir = Path(config.external_function_dir)
+        if external_function_dir.exists():
+            # Handle filters
+            filters_dir = external_function_dir.joinpath("filter")
+            if filters_dir.exists():
+                filters = get_functions_from_dir()
+                if filters:
+                    jinja_filters.update(filters)
+                    for k, v in jinja_filters.items():
+                        self.env.filters[k] = v
 
+            # Handle tests
+            tests_dir = external_function_dir.joinpath("tests")
+            if tests_dir.exists():
+                tests = get_functions_from_dir()
+                if tests:
+                    jinja_tests.update(tests)
+                    for k, v in jinja_tests.items():
+                        self.env.tests[k] = v
+
+        # Load jinja settings
         for attr in jinja_conf.keys():
             if hasattr(self.env, attr):
                 try:
@@ -37,9 +53,7 @@ class Templates(object):
 
     def render(self) -> str:
         # Check if the template is in the template folder
-
         if os.path.exists(self.template_path):
-
             encoding = check_encoding(self.template_path)
             if encoding != "utf-8":
                 change_encoding(self.template_path, encoding)

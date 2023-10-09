@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from ez_temp.ingester.environment_variables import collect_variables
+from ez_temp.variables.environment_variables import collect_variables
 
 logger = logging.getLogger(__name__)
 

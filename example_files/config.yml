@@ -1,0 +1,18 @@
+external_function_dir: ../example_external_function_dir
+force_overwrite: True
+load_env_vars: True
+debug: False
+
+# Parameters from https://jinja.palletsprojects.com/en/3.1.x/api/#high-level-api are passed to the Jinja environment object
+jinja_config:
+  trim_blocks: False
+  newline_sequence: '\n'
+  keep_trailing_newline: False
+  auto_reload: False
+  optimized: True
+
+# Will be applied to every template, but can be over-ridden by var files
+global_variables:
+  name: Person McPersonface
+  email: Person.McPersonface@example.com
+  github_profile: https://github.com/pmcpface

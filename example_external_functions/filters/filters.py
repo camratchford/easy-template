@@ -11,7 +11,6 @@ def stringify(node, encoding: str):
 
 
 def concat(nodes: list, encoding='utf-8'):
-
     txt_nodes = [t for t in nodes if isinstance(t, text_type)]
     nontxt_nodes = [n for n in nodes if n not in txt_nodes]
     for n in nontxt_nodes:

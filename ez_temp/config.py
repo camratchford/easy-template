@@ -5,6 +5,8 @@ import os
 import sys
 from pathlib import Path
 
+from rich.logging import RichHandler
+
 import yaml
 
 
@@ -20,29 +22,41 @@ else:
 
 class Config:
     def __init__(self):
+        # Config stuff
         self.configured = False
-        self.debug = False
+
         self.base_dir = Path(__file__).resolve().parent
         self.cwd = Path(os.getcwd())
         self.config_file_path = ""
         self.config_file = ""
         self.dry_run = False
 
+        # Jinja stuff
         self.external_function_dir = ""
         self.load_env_vars = False
         self.variables = []
         self.var_file = ""
-        self.output_file = ""
-        self.force_overwrite = False
         self.jinja_config = {}
         self.global_variables = {}
 
+        # Rich/Pygments stuff
+        self.rich_stdout = True
+        self.rich_markdown_stdout = False
+        self.rich_theme = "zenburn"
+
+        # Application-specific stuff
+        self.output_file = ""
+        self.output_stub = Path(self.output_file).name if self.output_file else ""
+        self.silent = False
+        self.force_overwrite = False
+
+        # Logging
         self.log_config = None
-
-        # todo check if template, var_file, and output_file are relative
-
-        if self.debug:
-            self.configure_debug_logging()
+        self.configure_debug_logging()
+        if self.silent:
+            self.rich_stdout = False
+            self.rich_markdown_stdout = False
+            self.suppress_console_logging()
 
     def configure_from_file(self, config_file_path):
         if config_file_path:
@@ -88,8 +102,11 @@ class Config:
             logging.config.dictConfig(self.log_config)
 
     def configure_debug_logging(self):
-        import logging
-        logging.basicConfig(level=logging.DEBUG, format='Line %(lineno)d ;; %(filename)s ;; %(message)s')
+        default_log_format = "%(asctime)s\t|%(levelname)s\t|%(name)s\t%(message)s"
+        logging.basicConfig(level="WARN", format="", datefmt="[%X]", handlers=[RichHandler()])
+
+    def suppress_console_logging(self):
+        logging.basicConfig(level=None, format='', handlers=None)
 
 
 config = Config()

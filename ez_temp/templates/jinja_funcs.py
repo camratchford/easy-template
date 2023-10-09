@@ -43,5 +43,6 @@ jinja_filters = {
     'datetime_format': datetime_format
 }
 
+jinja_tests = {}
 
 

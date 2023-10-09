@@ -3,9 +3,9 @@ import logging
 import sys
 
 from ez_temp.config import Config
-from ez_temp.templater import Templates
-from ez_temp.ingester import TemplateVars
-from ez_temp.outputs import FileHandler
+from ez_temp.templates import Templates
+from ez_temp.variables import TemplateVars
+from ez_temp.outputs import OutputHandler
 
 logger = logging.getLogger(__name__)
 
@@ -26,15 +26,13 @@ def main(config: Config, template):
         if config.variables:
             template_vars.load(config.variables)
 
-        # Load the template_vars variable dictionary into the templater environment
+        # Load the template_vars variable dictionary into the templates environment
         templater.env.globals.update(template_vars.vars)
 
         # Initialize the file handler
-        file_handler = FileHandler(config)
+        output_handler = OutputHandler(config)
         try:
-
             template_out = templater.render()
-
 
         except FileNotFoundError as e:
             logger.error(msg=f"Template [{template}] not found", exc_info=e)
@@ -45,9 +43,12 @@ def main(config: Config, template):
             sys.exit(1)
 
         if template_out:
+            output_handler.write_file(content=template_out)
+            output_handler.write_stdout(content=template_out)
             try:
                 # Hand the output string over to the file handler
-                file_handler.write_file(content=template_out)
+                pass
+
 
             except FileExistsError as e:
                 logger.error(e)

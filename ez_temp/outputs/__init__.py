@@ -1,1 +1,1 @@
-from .files import FileHandler
+from .files import OutputHandler

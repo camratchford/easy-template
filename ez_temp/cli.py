@@ -1,3 +1,4 @@
+import os.path
 import sys
 import click
 from ez_temp.config import config
@@ -49,6 +50,7 @@ from ez_temp.__main__ import main
     help="The path pointing toward a folder of python files which contain jinja2 filter functions",
 )
 @click.option(
+    "-f",
     "--force",
     default=False,
     type=bool,
@@ -56,18 +58,38 @@ from ez_temp.__main__ import main
     help="When true, output will overwrite any file in that path",
 )
 @click.option(
-    "--debug",
+    "--silent",
     default=False,
     type=bool,
     is_flag=True,
-    help="Logging will output to stdin",
+    help="Suppress logging to stdout and stderr",
 )
 @click.option(
     "--load-environment-vars",
-    default=False,
+    required=False,
     type=bool,
     is_flag=True,
     help="Will load environment variables in as jinja variables",
+)
+@click.option(
+    "--no-rich-stdout",
+    default=False,
+    type=bool,
+    is_flag=True,
+    help="Disabled output string formatting with Rich",
+)
+@click.option(
+    "--markdown",
+    required=False,
+    type=bool,
+    is_flag=True,
+    help="Formats output string with Rich's Markdown module",
+)
+@click.option(
+    "--rich-theme",
+    required=False,
+    type=str,
+    help="Changes the output theme for Rich to one of the Python Pygment module's styles",
 )
 def run(
     config_file: str,
@@ -77,18 +99,39 @@ def run(
     template_file: str,
     external_function_dir: str,
     force: bool,
-    debug: bool,
-    load_environment_vars: bool
+    silent: bool,
+    load_environment_vars: bool,
+    no_rich_stdout: bool,
+    markdown: bool,
+    rich_theme: str,
 ):
-    config.configure_from_file(config_file)
+    if config_file:
+        if not os.path.exists(config_file):
+            print(f"{config_file} not found")
+            raise FileNotFoundError
+        config.configure_from_file(config_file)
     config.variables = variables
-    config.var_file = var_file
+    if var_file:
+        if not os.path.exists(var_file):
+            print(f"{var_file} not found")
+            raise FileNotFoundError
+        config.var_file = var_file
     config.output_file = output_file
-    config.external_function_dir = external_function_dir
+    if external_function_dir:
+        if not os.path.exists(external_function_dir):
+            print(f"{external_function_dir} not found")
+            raise FileNotFoundError
+        config.external_function_dir = external_function_dir
+    if no_rich_stdout:
+        config.rich_stdout = False
+    if markdown:
+        config.rich_markdown_stdout = True
+    if rich_theme:
+        config.rich_theme = rich_theme
     config.load_env_vars = load_environment_vars
 
     config.force_overwrite = force
-    config.debug = debug
+    config.silent = silent
     main(config, template_file)
 
 
