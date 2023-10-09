@@ -4,35 +4,33 @@ from datetime import datetime
 
 
 def collect_variables():
-    vars = {}
-
+    variables = {}
     time_vars = {
         "now": datetime.now()
     }
-    vars.update(time_vars)
+    variables.update(time_vars)
 
     os_vars = {
         "os": {
             "name": os.name,
-            
         }
     }
-    vars.update(os_vars)
+    variables.update(os_vars)
 
     sys_vars = {
         "sys": {
             "defaultencoding": sys.getdefaultencoding(),
-            "platform": sys.platform, 
-            "winver": sys.getwindowsversion().major if sys.platform == "win32" else None
+            "platform": sys.platform,
+            "winver": sys.getwindowsversion().major if sys.platform == "win32" else None,
         }
     }
-    vars.update(sys_vars)
+    variables.update(sys_vars)
 
     env = {
         "environ": {}
     }
     env['environ'].update(os.environ)
-    vars.update(env)
+    variables.update(env)
 
-    return vars
+    return variables
 
