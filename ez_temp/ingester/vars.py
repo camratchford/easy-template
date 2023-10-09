@@ -1,5 +1,6 @@
 
 import logging
+import os.path
 
 from pathlib import Path
 
@@ -12,28 +13,29 @@ logger = logging.getLogger(__name__)
 
 class TemplateVars(object):
     def __init__(self, config):
-        self.var_dir = config.vars_folder
-        self.vars = collect_variables()
-
+        self.vars = {}
         if config.global_variables:
             self.vars.update(config.global_variables)
 
-    def ingest(self, var_file=None):
-        # Populates environ, os, sys keys
-        # Finds valid paths
-        if var_file and Path(self.var_dir).joinpath(var_file).exists():
-            var_files = [
-                p for p in [
-                    Path(self.var_dir).joinpath(var_file),
-                    Path.cwd().joinpath(var_file),
-                    Path(var_file)
-                ] if p.exists()
-            ]
+    def load_file(self, var_file=None):
+        if os.path.exists(var_file):
             try:
-                var_file_path = var_files.pop()
-                if var_file_path and var_file.endswith((".yaml", ".yml")):
-                    with open(str(var_file_path), "r") as file:
-                        self.vars.update(yaml.safe_load(file))
+                with open(var_file, "r") as file:
+                    self.vars.update(yaml.safe_load(file))
             except Exception as e:
                 logger.error(e)
 
+    def load(self, variables: list = None):
+        if variables:
+            for v in variables:
+                try:
+                    split_var = v.split("=")
+                    if r"\," in split_var[1]:
+                        split_var[1] = split_var[1].split(r"\,")
+                    self.vars[split_var[0]] = split_var[1]
+                except ValueError as e:
+                    logger.error(f"Variable {v} could not be parsed\n\t{e}")
+
+
+    def load_env(self):
+        self.vars.update(collect_variables())
