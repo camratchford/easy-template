@@ -110,18 +110,23 @@ def run(
             print(f"{config_file} not found")
             raise FileNotFoundError
         config.configure_from_file(config_file)
+
     config.variables = variables
+
     if var_file:
         if not os.path.exists(var_file):
             print(f"{var_file} not found")
             raise FileNotFoundError
         config.var_file = var_file
+
     config.output_file = output_file
+
     if external_function_dir:
         if not os.path.exists(external_function_dir):
             print(f"{external_function_dir} not found")
             raise FileNotFoundError
         config.external_function_dir = external_function_dir
+
     if no_rich_stdout:
         config.rich_stdout = False
     if markdown:

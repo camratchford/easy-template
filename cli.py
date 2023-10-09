@@ -92,18 +92,18 @@ from ez_temp.__main__ import main
     help="Changes the output theme for Rich to one of the Python Pygment module's styles",
 )
 def run(
-    config_file: str,
-    variables: list,
-    var_file: str,
-    output_file: str,
-    template_file: str,
-    external_function_dir: str,
-    force: bool,
-    silent: bool,
-    load_environment_vars: bool,
-    no_rich_stdout: bool,
-    markdown: bool,
-    rich_theme: str,
+        config_file: str,
+        variables: list,
+        var_file: str,
+        output_file: str,
+        template_file: str,
+        external_function_dir: str,
+        force: bool,
+        silent: bool,
+        load_environment_vars: bool,
+        no_rich_stdout: bool,
+        markdown: bool,
+        rich_theme: str,
 ):
     if config_file:
         if not os.path.exists(config_file):
@@ -129,12 +129,10 @@ def run(
 
     if no_rich_stdout:
         config.rich_stdout = False
-
-    config.rich_markdown_stdout = markdown
-
+    if markdown:
+        config.rich_markdown_stdout = True
     if rich_theme:
         config.rich_theme = rich_theme
-
     config.load_env_vars = load_environment_vars
 
     config.force_overwrite = force

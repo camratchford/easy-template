@@ -1,7 +1,5 @@
 import codecs
-import os
 from pathlib import Path
-
 import magic
 
 
