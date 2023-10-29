@@ -2,6 +2,8 @@
 import logging
 import sys
 
+from rich.console import Console
+
 from ez_temp.config import Config
 from ez_temp.templates import Templates
 from ez_temp.variables import TemplateVars
@@ -44,7 +46,9 @@ def main(config: Config, template):
 
         if template_out:
             output_handler.write_file(content=template_out)
-            output_handler.write_stdout(content=template_out)
+
+            console = Console()
+            console.print(output_handler.write_stdout(content=template_out))
             try:
                 # Hand the output string over to the file handler
                 pass

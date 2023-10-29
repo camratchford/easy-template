@@ -30,7 +30,6 @@ class OutputHandler(object):
                 logger.warning(e)
 
     def write_stdout(self, content):
-        console = Console()
         theme = "zenburn"
 
         if self.config.rich_theme != "zenburn" and self.config.rich_theme in STYLE_MAP.keys():
@@ -49,7 +48,7 @@ class OutputHandler(object):
             output = Markdown(content)
 
         if not self.config.silent:
-            console.print(output)
+            return output
 
-        filename.unlink()
+        return ""
 

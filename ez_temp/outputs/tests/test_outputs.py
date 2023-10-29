@@ -41,8 +41,8 @@ def test_write_stdout(mock_config):
     with patch("ez_temp.outputs.output.Console") as mock_console:
         mock_console.assert_called_with()
         handler = OutputHandler(mock_config)
-        handler.write_stdout("Test content")
-        mock_console.return_value.print.assert_called_with("Test content")
+        output = handler.write_stdout("Test content")
+        assert str(output) == "Test content"
 
 
 
@@ -52,4 +52,5 @@ def test_write_stdout_silent(mock_config):
     with patch("ez_temp.outputs.output.Console") as mock_console:
         handler = OutputHandler(mock_config)
         handler.write_stdout("Test content")
-        mock_console.return_value.print.assert_not_called()
+        output = handler.write_stdout("Test content")
+        assert not output

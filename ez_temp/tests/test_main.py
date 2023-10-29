@@ -35,7 +35,9 @@ def test_main_successful_run(mock_config):
     with patch("ez_temp.__main__.Templates.render", return_value="Rendered Content"):
         with patch("ez_temp.__main__.OutputHandler.write_file") as mock_write_file:
             main(mock_config, "template.j2")
-            mock_write_file.assert_called_with("Rendered Content")
-            # with patch("ez_temp.__main__.OutputHandler.write_stdout") as mock_write_stdout:
+            mock_write_file.assert_called_with(content="Rendered Content")
+            with patch("ez_temp.__main__.OutputHandler.write_stdout") as mock_write_stdout:
+                mock_write_stdout.assert_called()
 
-                # mock_write_stdout.assert_called_with("Rendered Content")
+                assert str(mock_write_stdout.return_value) == "Rendered Content"
+
