@@ -31,7 +31,7 @@ pip install git+https://github.com/camratchford/easy-template
 
 ### Create config file:
 
-Ex: [example_files/config.yml](examples/example_files/config.yml)
+Ex: [example_files/config.yml](examples/single_file_example/config.yml)
 ```yaml
 external_function_dir: ./path/to/jinja_functions
 force_overwrite: True
@@ -56,7 +56,7 @@ global_variables:
 
 ### Create template file
 
-Ex: [example_files/readme_template.md.j2](examples/example_files/readme_template.md.j2)
+Ex: [example_files/readme_template.md.j2](examples/single_file_example/readme_template.md.j2)
 ```markdown
 
 
@@ -78,7 +78,7 @@ Contact: [{{ email }}](mailto:{{ email }})
 ```
 
 ### Create var file:
-Ex: [example_files/vars.yml](examples/example_files/vars.yml)
+Ex: [example_files/vars.yml](examples/single_file_example/vars.yml)
 ```yaml
 
 title: How to make a cheeseburger
@@ -95,7 +95,7 @@ toc:
 
 ### Run
 
-Ex: [example_files/example_script.sh](examples/example_files/example_script.sh)
+Ex: [example_files/example_script.sh](examples/single_file_example/run_example.ps1)
 ```shell
 # Config path arg is absolute, var and template args are relative to their respective directories defined in the config file
 ezt.exe --force \
@@ -111,7 +111,7 @@ in the path defined with the `-o` argument
 
 The command outputs a file `README.md` to the output directory defined in your config.
 
-Ex: The contents of [example_files/README.md](examples/example_files/README.md)
+Ex: The contents of [example_files/README.md](examples/single_file_example/README.md)
 
 ```markdown
 # How do you make a cheeseburger?

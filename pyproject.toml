@@ -1,9 +1,17 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ez_temp"]
+
 [project]
 name = 'Easy-Template'
 description = 'Quick and Dirty Jinja templating from CLI with YAML'
 authors = [
     {name = 'Cam Ratchford', email = 'camratchford@gmail.com'},
 ]
+
 classifiers = [
     'Development Status :: 1 - Testing required',
     'Programming Language :: Python',
@@ -23,6 +31,8 @@ dependencies = [
     "click==8.1.7",
     "colorama==0.4.6",
     "Jinja2==3.1.2",
+    "python-magic==0.4.27",
+    "python-magic-bin==0.4.14",
     "markdown-it-py==3.0.0",
     "MarkupSafe==2.1.3",
     "mdurl==0.1.2",
@@ -61,4 +71,4 @@ Homepage = 'https://github.com/camratchford/Easy-Template'
 Source = 'https://github.com/camratchford/Easy-Template'
 
 [project.scripts]
-app_run = "app.cli:cli"
+ezt = "ez_temp.cli:run"

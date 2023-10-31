@@ -31,12 +31,19 @@ def main(config: Config):
 
         # Initialize the file handler
         output_handler = OutputHandler(config)
+
         if templater.template_path:
             template_dict = templater.compile_template()
+            properties = list(template_dict.values())[0]
+            output_path = properties.get("path")
+
             output_handler.write_file(template_dict)
+            output_handler.write_stdout(output_path)
+
         elif templater.tree_dir:
             template_dict = templater.compile_tree()
             output_handler.write_tree(template_dict)
+
 
 
 

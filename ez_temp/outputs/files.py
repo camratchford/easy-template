@@ -1,6 +1,7 @@
 import logging
 
 from pathlib import Path
+from os import getcwd
 
 from rich.console import Console
 from rich.syntax import Syntax
@@ -52,27 +53,23 @@ class OutputHandler(object):
             except Exception as e:
                 logger.error(e, f"Could not write {name}")
 
-    def write_stdout(self, content):
+    def write_stdout(self, output_path: Path):
+        content = output_path.read_text()
         console = Console()
         theme = "zenburn"
 
+        output = ""
         if self.config.rich_theme != "zenburn" and self.config.rich_theme in STYLE_MAP.keys():
             theme = self.config.rich_theme
 
-        output = content
-        tempdir = self.config.cwd
-        filename = Path(tempdir).joinpath("ezt.tmp")
-        with open(filename, "w") as temp_file:
-            temp_file.write(content)
-
         if self.config.rich_stdout:
-            output = Syntax.from_path(str(filename), theme=theme, background_color="default")
+            output = Syntax.from_path(str(output_path), theme=theme, background_color="default")
 
-        if self.config.rich_markdown_stdout:
+        elif self.config.rich_markdown_stdout:
             output = Markdown(content)
 
-        if not self.config.silent:
+        if output and not self.config.silent:
             console.print(output)
 
-        filename.unlink()
+
 

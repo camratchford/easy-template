@@ -1,0 +1,10 @@
+project_name: GoodServer
+project_description: A webserver with good intentions.
+project_stub: good_server
+project_repo: https://github.com/camratchford/goodserver
+project_docs_url: https://readthedocs.com/camratchford/goodserver
+project_api_spec: https://goodserver.example.com/docs/
+project_authors:
+  - name: Cam Ratchford
+    email: camratchford@gmail.com
+cli_executable_name: gserv

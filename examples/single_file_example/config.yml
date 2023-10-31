@@ -1,4 +1,4 @@
-external_function_dir: ../example_external_function_dir
+external_function_dir: ../example_external_functions
 force_overwrite: True
 load_env_vars: True
 debug: False

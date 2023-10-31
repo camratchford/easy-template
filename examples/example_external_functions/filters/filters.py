@@ -1,7 +1,7 @@
 from six import binary_type, text_type
 
 
-def stringify(node, encoding: str):
+def stringify(node, encoding: str = 'utf-8'):
     if isinstance(node, binary_type):
         return node.decode(encoding)
     elif hasattr(node, "__repl__"):
@@ -10,7 +10,7 @@ def stringify(node, encoding: str):
         return str(node)
 
 
-def concat(nodes: list, encoding='utf-8'):
+def concat(nodes: list, encoding: str = 'utf-8'):
     txt_nodes = [t for t in nodes if isinstance(t, text_type)]
     nontxt_nodes = [n for n in nodes if n not in txt_nodes]
     for n in nontxt_nodes:
