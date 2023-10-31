@@ -10,10 +10,10 @@ from ez_temp.outputs import OutputHandler
 logger = logging.getLogger(__name__)
 
 
-def main(config: Config, template):
+def main(config: Config):
     # Create the Jinja environment
     if not config.dry_run:
-        templater = Templates(template, config.jinja_config)
+        templater = Templates(config.jinja_config)
 
         # Load the TemplateVars object with the app config
         template_vars = TemplateVars(config)
@@ -31,32 +31,13 @@ def main(config: Config, template):
 
         # Initialize the file handler
         output_handler = OutputHandler(config)
-        try:
-            template_out = templater.render()
+        if templater.template_path:
+            template_dict = templater.compile_template()
+            output_handler.write_file(template_dict)
+        elif templater.tree_dir:
+            template_dict = templater.compile_tree()
+            output_handler.write_tree(template_dict)
 
-        except FileNotFoundError as e:
-            logger.error(msg=f"Template [{template}] not found", exc_info=e)
-            sys.exit(100)
-
-        except Exception as e:
-            logger.error(e)
-            sys.exit(1)
-
-        if template_out:
-            output_handler.write_file(content=template_out)
-            output_handler.write_stdout(content=template_out)
-            try:
-                # Hand the output string over to the file handler
-                pass
-
-
-            except FileExistsError as e:
-                logger.error(e)
-                sys.exit(200)
-
-            except Exception as e:
-                logger.error(e)
-                sys.exit(1)
 
 
 

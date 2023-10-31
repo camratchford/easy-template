@@ -1,0 +1,29 @@
+site_name: Easy-Template docs
+site_dir: site
+site_url: https://github.com/camratchford/easy-templates
+repo_name: camratchford/easy-template
+repo_url: https://github.com/camratchford/easy-template
+plugins:
+  - search:
+      lang: en
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/camratchford/easy-template
+theme:
+  name: material
+extra_css:
+    - static/styles.css
+markdown_extensions:
+  - toc:
+      baselevel: 2
+nav:
+  - 'Quickstart':
+    - 'Introduction': 'introduction.md'
+    - 'Quickstart': 'quickstart.md'
+  - 'User guide':
+    - 'Command Line Interface': 'cli.md'
+    - 'Variables': 'vars.md'
+    - 'External Jinja Functions': 'jinja funcs.md'
+    - 'Logging': 'logging.md'
+    - 'Compiling ezt': 'compiling.md'

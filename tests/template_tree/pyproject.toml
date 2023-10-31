@@ -1,10 +1,8 @@
 [project]
 name = '{{ project_name }}'
 description = '{{ project_description }}'
-authors = [
-    {% for author in project_authors %}
-    {name = '{{ author.name }}', email = '{{ author.email }}'},
-    {% endfor %}
+authors = [{% for author in project_authors %}
+    {name = '{{ author.name }}', email = '{{ author.email }}'},{% endfor %}
 ]
 
 classifiers = [
