@@ -29,8 +29,7 @@ $INCLUDE_PATHS="../"
 $SCRIPT_FILE="../cli.py"
 Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\activate")
 Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pip") -ArgumentList @("install pillow")  -Wait -NoNewWindow
-Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pip") -ArgumentList @("install -r `"$RepoRoot\ez_temp\requirements.txt`"")  -Wait -NoNewWindow
-Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pip") -ArgumentList @("install ..") -Wait -NoNewWindow
+Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pip") -ArgumentList @("install -e ..") -Wait -NoNewWindow
 Start-Process -FilePath (Join-Path -Path $VENV_PATH -ChildPath "scripts\pyinstaller") -ArgumentList @("-y", "--clean", "--console", "--onefile", "--icon=$IconPath", "--name=$EXE_NAME", "--paths=$INCLUDE_PATHS", "--collect-submodules=ez_temp", $SCRIPT_FILE) -Wait -NoNewWindow
 
 

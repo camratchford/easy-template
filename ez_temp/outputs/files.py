@@ -14,20 +14,43 @@ class OutputHandler(object):
     def __init__(self, config):
         self.config = config
 
-    def write_file(self, content):
-        output_file = Path(self.config.output_file)
-        if content:
+    def write_tree(self, template_dict: dict):
+        if not Path(self.config.output).exists():
+            Path(self.config.output).mkdir(mode=755)
+        if template_dict:
+            for template, properties in template_dict.items():
+                name = template
+                path = properties.get("path")
+                parent_path = path.parent.resolve()
+                content = properties.get('content')
+                print(str(path))
+
+                if not parent_path.exists():
+                    parent_path.mkdir(mode=755)
+
+                try:
+                    logger.info(f"Writing {name}")
+
+                    path.touch(exist_ok=True)
+                    path.write_text(content, encoding='utf-8')
+                except Exception as e:
+                    logger.error(e, f"Could not write {name}")
+
+    def write_file(self, template_dict: dict):
+        if template_dict:
+            name, properties = template_dict.popitem()
+            path = properties.get('path')
+            parent_path = path.parent.resolve()
+            content = properties.get('content')
+
+            if not parent_path.exists():
+                parent_path.mkdir(mode=755)
             try:
-                if output_file.exists() and not self.config.force_overwrite:
-                    raise FileExistsError(
-                        f"File {output_file.name} not rendered because the file already exists\n"
-                        "Use the --force option to override."
-                    )
-                with open(output_file, "w") as writer:
-                    writer.write(content)
-                    logger.debug(f"Rendered {output_file.name} template")
-            except FileExistsError as e:
-                logger.warning(e)
+                logger.info(f"Writing {name}")
+                path.touch(exist_ok=True)
+                path.write_text(content, encoding='utf-8')
+            except Exception as e:
+                logger.error(e, f"Could not write {name}")
 
     def write_stdout(self, content):
         console = Console()

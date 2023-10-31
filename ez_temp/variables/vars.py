@@ -29,8 +29,11 @@ class TemplateVars(object):
         if variables:
             for v in variables:
                 try:
+                    if "=" not in v:
+                        logger.warning(f"Variable '{v}' is not parsable as a key:value pair, skipping.")
+                        continue
                     split_var = v.split("=")
-                    if r"\," in split_var[1]:
+                    if len(split_var) > 1 and r"\," in split_var[1]:
                         split_var[1] = split_var[1].split(r"\,")
                     self.vars[split_var[0]] = split_var[1]
                 except ValueError as e:

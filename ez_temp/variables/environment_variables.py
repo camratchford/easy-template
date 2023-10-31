@@ -6,7 +6,7 @@ from datetime import datetime
 def collect_variables():
     variables = {}
     time_vars = {
-        "now": datetime.now()
+        "now": datetime.now().strftime("%H:%M %d-%m-%y")
     }
     variables.update(time_vars)
 
